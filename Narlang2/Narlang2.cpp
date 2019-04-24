@@ -1,12 +1,11 @@
 ﻿#include "pch.h"
 #include <iostream>
-#include "doctest-master/doctest/doctest.h"
+#include "lexer.h"
 
-
-int main()
+int main(int argc, char *argv[])
 {
-    std::cout << "Hello World!\n"; 
-	
-
-
+	if (argc == 1) {
+		std::cout << "Narlang2 interpreter.\nPass name of a file with Narlang2 program.\n\
+\t-h --help for help";
+	}
 }
