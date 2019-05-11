@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../Narlang2/lexer.h"
-#include "../Narlang2/lexer.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

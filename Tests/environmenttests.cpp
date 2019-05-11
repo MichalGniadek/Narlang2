@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../Narlang2/environment.h"
-#include "../Narlang2/environment.cpp"
 #include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

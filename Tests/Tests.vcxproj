@@ -160,6 +160,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ast-environment-integration.cpp" />
     <ClCompile Include="asttests.cpp" />
     <ClCompile Include="environmenttests.cpp" />
     <ClCompile Include="stdafx.cpp">
