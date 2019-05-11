@@ -4,7 +4,8 @@
 
 namespace Ast{
 	struct Identifier{
-		int id;
+		Identifier(const std::string s) : id(s) {}
+		std::string id;
 	};
 
 	struct Callable{
@@ -15,5 +16,9 @@ namespace Ast{
 		std::string err;
 	};
 
-	using Value = std::variant<std::string, int, bool, Identifier, Error, Callable>;
+	struct Null{
+
+	};
+
+	using Value = std::variant<std::string, int, bool, Identifier, Error, Callable, Null>;
 }

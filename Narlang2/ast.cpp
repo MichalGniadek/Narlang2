@@ -7,16 +7,16 @@ using namespace Ast;
 
 RootNode::RootNode(Node * node) : node(node){}
 
-const Error RootNode::run() const{
-	auto v = node->run();
+const Error RootNode::run(Env::Environment& env) const{
+	auto v = node->run(env);
 	if(auto p = std::get_if<Error>(&v)) return *p;
 	return {};
 }
 
 Print::Print(Node * node) : node(node){}
 
-const Value Print::run() const{
-	Value val = node->run();
+const Value Print::run(Env::Environment& env) const{
+	Value val = node->run(env);
 	if(auto p = std::get_if<std::string>(&val)){
 		std::cout << *p;
 	} else if(auto p = std::get_if<int>(&val)){
@@ -31,15 +31,15 @@ const Value Print::run() const{
 
 Literal::Literal(Value value) : value(value){}
 
-const Value Literal::run() const{
+const Value Literal::run(Env::Environment& env) const{
 	return value;
 }
 
 BinaryOperator::BinaryOperator(const Type t, Node const * const n1, Node const * const n2) : type(t), n1(n1), n2(n2) {}
 
-const Value BinaryOperator::run() const{
-	Value val1 = n1->run();
-	Value val2 = n2->run();
+const Value BinaryOperator::run(Env::Environment& env) const{
+	Value val1 = n1->run(env);
+	Value val2 = n2->run(env);
 	switch(type){
 	case Addition:
 		if(auto[p1, p2] = std::make_pair(std::get_if<int>(&val1), std::get_if<int>(&val2)); p1 && p2){
@@ -141,15 +141,15 @@ const Value BinaryOperator::run() const{
 If_n::If_n(Node const * const condition, Node const * const body, Node const * const else_body) : 
 		condition(condition), body(body), else_body(else_body) {}
 
-const Value If_n::run() const{
-	Value c = condition->run();
+const Value If_n::run(Env::Environment& env) const{
+	Value c = condition->run(env);
 	if(auto p = std::get_if<bool>(&c); p){
 		if(*p){
-			return body->run();
+			return body->run(env);
 		} else if(else_body != nullptr){
-			return else_body->run();
+			return else_body->run(env);
 		} else{
-			return false;
+			return Ast::Null();
 		}
 	} else{
 		return Error{"Ast error: if condition isn't of type bool"};
@@ -158,17 +158,17 @@ const Value If_n::run() const{
 
 While_n::While_n(Node const * const condition, Node const * const body) : condition(condition), body(body) {}
 
-const Value While_n::run() const{
-	Value c = condition->run();
+const Value While_n::run(Env::Environment& env) const{
+	Value c = condition->run(env);
 	bool const * p = std::get_if<bool>(&c);
 	while((p) && (*p)){
-		const Value ret = body->run();
-		p = std::get_if<bool>(&condition->run());
+		const Value ret = body->run(env);
+		p = std::get_if<bool>(&condition->run(env));
 		if(!(p)) break;
 		if(!(*p)) return ret;
 	}
 	if(!(p)) return Error{"Ast error: while condition isn't of type bool"};
-	return false;
+	return Ast::Null();
 }
 
 Block::Block(const std::vector<Node*>& nodes) : nodes(){
@@ -177,10 +177,35 @@ Block::Block(const std::vector<Node*>& nodes) : nodes(){
 	}
 }
 
-const Value Block::run() const{
-	if(nodes.empty()) return false;
+const Value Block::run(Env::Environment& env) const{
+	env.increaseScope();
+	if(nodes.empty()) return Ast::Null();
 	for(size_t i = 0; i < nodes.size() - 1; i++){
-		nodes[i]->run();
+		nodes[i]->run(env);
 	}
-	return nodes.back()->run();
+	Value r = nodes.back()->run(env);
+	env.decreaseScope();
+	return r;
+}
+
+Ast::Var::Var(const std::string& id) : identifier(id) {}
+
+const Value Ast::Var::run(Env::Environment& env) const{
+	env.allocateValue(identifier, Ast::Null());
+	return Ast::Identifier{identifier};
+}
+
+Ast::Identifier_n::Identifier_n(const std::string& id) : id(id) {}
+
+const Value Ast::Identifier_n::run(Env::Environment & env) const{
+	return Identifier(id);
+}
+
+Ast::Assign::Assign(Node const * const lnode, Node const * const rnode) : lnode(lnode), rnode(rnode) {}
+
+const Value Ast::Assign::run(Env::Environment & env) const{
+	auto id = std::get_if<Identifier>(&lnode->run(env));
+	const Value v = rnode->run(env);
+	env.setValue(id->id, v);
+	return v;
 }

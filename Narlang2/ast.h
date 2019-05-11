@@ -7,13 +7,13 @@
 namespace Ast{
 	class Node{
 	public:
-		virtual const Value run() const = 0;
+		virtual const Value run(Env::Environment& env) const = 0;
 	};
 
 	class RootNode{
 	public:
 		RootNode(Node* node);
-		const Error run() const;
+		const Error run(Env::Environment& env) const;
 	private:
 		const std::unique_ptr<const Node> node;
 	};
@@ -21,7 +21,7 @@ namespace Ast{
 	class Print final : public Node{
 	public:
 		Print(Node* node);
-		const Value run() const;
+		const Value run(Env::Environment& env) const;
 	private:
 		const std::unique_ptr<const Node> node;
 	};
@@ -29,7 +29,7 @@ namespace Ast{
 	class Literal final : public Node{
 	public:
 		Literal(Value value);
-		const Value run() const;
+		const Value run(Env::Environment& env) const;
 	private:
 		const Value value;
 	};
@@ -39,7 +39,7 @@ namespace Ast{
 		enum Type{Addition, Substraction, Multiplication, Division, Equal, NotEqual, LessEqual, Less, GreaterEqual, Greater,
 		And, Or};
 		BinaryOperator(const Type t, Node const * const n1, Node const * const n2);
-		const Value run() const;
+		const Value run(Env::Environment& env) const;
 	private:
 		const Type type;
 		const std::unique_ptr<const Node> n1;
@@ -49,7 +49,7 @@ namespace Ast{
 	class If_n final : public Node{
 	public:
 		If_n(Node const * const condition, Node const * const body, Node const * const else_body = nullptr);
-		const Value run() const;
+		const Value run(Env::Environment& env) const;
 	private:
 		const std::unique_ptr<const Node> condition;
 		const std::unique_ptr<const Node> body;
@@ -59,7 +59,7 @@ namespace Ast{
 	class While_n final : public Node{
 	public:
 		While_n(Node const * const condition, Node const * const body);
-		const Value run() const;
+		const Value run(Env::Environment& env) const;
 	private:
 		const std::unique_ptr<const Node> condition;
 		const std::unique_ptr<const Node> body;
@@ -68,8 +68,33 @@ namespace Ast{
 	class Block final : public Node{
 	public:
 		Block(const std::vector<Node*>& nodes);
-		const Value run() const;
+		const Value run(Env::Environment& env) const;
 	private:
 		std::vector<std::unique_ptr<Node>> nodes;
+	};
+
+	class Var final : public Node{
+	public:
+		Var(const std::string& id);
+		const Value run(Env::Environment& env) const;
+	private:
+		const std::string identifier;
+	};
+
+	class Identifier_n final : public Node{
+	public:
+		Identifier_n(const std::string& id);
+		const Value run(Env::Environment& env) const;
+	private:
+		const std::string id;
+	};
+
+	class Assign final : public Node{
+	public:
+		Assign(Node const * const lnode, Node const * const rnode);
+		const Value run(Env::Environment& env) const;
+	private:
+		const std::unique_ptr<const Node> lnode;
+		const std::unique_ptr<const Node> rnode;
 	};
 }
