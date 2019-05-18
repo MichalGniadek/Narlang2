@@ -46,9 +46,9 @@ namespace Ast{
 		const std::unique_ptr<const Node> n2;
 	};
 
-	class If_n final : public Node{
+	class IfNode final : public Node{
 	public:
-		If_n(Node const * const condition, Node const * const body, Node const * const else_body = nullptr);
+		IfNode(Node const * const condition, Node const * const body, Node const * const else_body = nullptr);
 		const Value run(Env::Environment& env) const;
 	private:
 		const std::unique_ptr<const Node> condition;
@@ -56,9 +56,9 @@ namespace Ast{
 		const std::unique_ptr<const Node> else_body;
 	};
 
-	class While_n final : public Node{
+	class WhileNode final : public Node{
 	public:
-		While_n(Node const * const condition, Node const * const body);
+		WhileNode(Node const * const condition, Node const * const body);
 		const Value run(Env::Environment& env) const;
 	private:
 		const std::unique_ptr<const Node> condition;
@@ -81,9 +81,9 @@ namespace Ast{
 		const std::string identifier;
 	};
 
-	class Identifier_n final : public Node{
+	class IdentifierNode final : public Node{
 	public:
-		Identifier_n(const std::string& id);
+		IdentifierNode(const std::string& id);
 		const Value run(Env::Environment& env) const;
 	private:
 		const std::string id;

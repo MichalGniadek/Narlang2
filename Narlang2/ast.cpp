@@ -150,10 +150,10 @@ const Value BinaryOperator::run(Env::Environment& env) const{
 	}
 }
 
-If_n::If_n(Node const * const condition, Node const * const body, Node const * const else_body) : 
+IfNode::IfNode(Node const * const condition, Node const * const body, Node const * const else_body) :
 		condition(condition), body(body), else_body(else_body) {}
 
-const Value If_n::run(Env::Environment& env) const{
+const Value IfNode::run(Env::Environment& env) const{
 	Value c = condition->run(env);
 	if(auto p = std::get_if<bool>(&c); p){
 		if(*p){
@@ -168,9 +168,9 @@ const Value If_n::run(Env::Environment& env) const{
 	}
 }
 
-While_n::While_n(Node const * const condition, Node const * const body) : condition(condition), body(body) {}
+WhileNode::WhileNode(Node const * const condition, Node const * const body) : condition(condition), body(body) {}
 
-const Value While_n::run(Env::Environment& env) const{
+const Value WhileNode::run(Env::Environment& env) const{
 	Value c = condition->run(env);
 	bool const * p = std::get_if<bool>(&c);
 	while((p) && (*p)){
@@ -207,9 +207,9 @@ const Value Ast::Var::run(Env::Environment& env) const{
 	return Ast::Identifier{identifier};
 }
 
-Ast::Identifier_n::Identifier_n(const std::string& id) : id(id) {}
+IdentifierNode::IdentifierNode(const std::string& id) : id(id) {}
 
-const Value Ast::Identifier_n::run(Env::Environment & env) const{
+const Value Ast::IdentifierNode::run(Env::Environment & env) const{
 	return Identifier(id);
 }
 

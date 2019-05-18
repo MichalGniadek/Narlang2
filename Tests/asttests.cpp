@@ -109,7 +109,7 @@ public:
 	TEST_METHOD(If_n){
 		{
 			Env::Environment e;
-			Ast::If_n n(new Ast::Literal(true), new Ast::Literal(3), new Ast::Literal(5));
+			Ast::IfNode n(new Ast::Literal(true), new Ast::Literal(3), new Ast::Literal(5));
 			Ast::Value v = n.run(e);
 			auto p = std::get_if<int>(&v);
 			Assert::IsFalse(p == nullptr);
@@ -117,7 +117,7 @@ public:
 		}
 		{
 			Env::Environment e;
-			Ast::If_n n(new Ast::Literal(false), new Ast::Literal(3), new Ast::Literal(5));
+			Ast::IfNode n(new Ast::Literal(false), new Ast::Literal(3), new Ast::Literal(5));
 			Ast::Value v = n.run(e);
 			auto p = std::get_if<int>(&v);
 			Assert::IsFalse(p == nullptr);
@@ -125,7 +125,7 @@ public:
 		}
 		{
 			Env::Environment e;
-			Ast::If_n n(new Ast::Literal(true), new Ast::Literal(3));
+			Ast::IfNode n(new Ast::Literal(true), new Ast::Literal(3));
 			Ast::Value v = n.run(e);
 			auto p = std::get_if<int>(&v);
 			Assert::IsFalse(p == nullptr);
@@ -133,7 +133,7 @@ public:
 		}
 		{
 			Env::Environment e;
-			Ast::If_n n(new Ast::Literal(false), new Ast::Literal(3));
+			Ast::IfNode n(new Ast::Literal(false), new Ast::Literal(3));
 			Ast::Value v = n.run(e);
 			auto p = std::get_if<Ast::Null>(&v);
 			Assert::IsFalse(p == nullptr);

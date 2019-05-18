@@ -23,7 +23,7 @@ public:
 		e.increaseScope();
 		Ast::Var v("a");
 		v.run(e);
-		Ast::Identifier_n id("a");
+		Ast::IdentifierNode id("a");
 		auto p = std::get_if<Ast::Identifier>(&id.run(e));
 		Assert::IsFalse(p == nullptr);
 	}
@@ -34,7 +34,7 @@ public:
 		Ast::Var v("a");
 		v.run(e);
 		
-		Ast::Node* id = new Ast::Identifier_n("a");
+		Ast::Node* id = new Ast::IdentifierNode("a");
 		Ast::Node* l = new Ast::Literal(3);
 		Ast::Assign as(id, l);
 
@@ -54,19 +54,19 @@ public:
 			),
 
 			new Ast::Assign(
-				new Ast::Identifier_n("i"),
-				new Ast::BinaryOperator(Ast::BinaryOperator::Addition, new Ast::Identifier_n("i"), new Ast::Literal(1))
+				new Ast::IdentifierNode("i"),
+				new Ast::BinaryOperator(Ast::BinaryOperator::Addition, new Ast::IdentifierNode("i"), new Ast::Literal(1))
 			),
 
-			new Ast::While_n(
-				new Ast::BinaryOperator(Ast::BinaryOperator::Less, new Ast::Identifier_n("i"), new Ast::Literal(5)),
+			new Ast::WhileNode(
+				new Ast::BinaryOperator(Ast::BinaryOperator::Less, new Ast::IdentifierNode("i"), new Ast::Literal(5)),
 				new Ast::Assign(
-					new Ast::Identifier_n("i"),
-					new Ast::BinaryOperator(Ast::BinaryOperator::Addition, new Ast::Identifier_n("i"), new Ast::Literal(1))
+					new Ast::IdentifierNode("i"),
+					new Ast::BinaryOperator(Ast::BinaryOperator::Addition, new Ast::IdentifierNode("i"), new Ast::Literal(1))
 				)
 			),
 
-			new Ast::DEBUG_GetValue(new Ast::Identifier_n("i"))
+			new Ast::DEBUG_GetValue(new Ast::IdentifierNode("i"))
 		});
 		
 		Assert::IsTrue(*std::get_if<int>(&b.run(e)) == 5);
