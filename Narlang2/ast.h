@@ -97,4 +97,12 @@ namespace Ast{
 		const std::unique_ptr<const Node> lnode;
 		const std::unique_ptr<const Node> rnode;
 	};
+
+	class DEBUG_GetValue final : public Node{
+	public:
+		DEBUG_GetValue(Node const * const node);
+		const Value run(Env::Environment& env) const;
+	private:
+		const std::unique_ptr<const Node> node;
+	};
 }

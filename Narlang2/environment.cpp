@@ -3,16 +3,16 @@
 
 using namespace Env;
 
-void Environment::allocateValue(const std::string & identifier, const Ast::Value & value){
-	environment.back().emplace(identifier, value);
+void Environment::allocateValue(const Ast::Identifier& identifier, const Ast::Value & value){
+	environment.back().emplace(identifier.id, value);
 }
 
-void Environment::setValue(const std::string& identifier, const Ast::Value& value){
-	environment.back()[identifier] = value;
+void Environment::setValue(const Ast::Identifier& identifier, const Ast::Value& value){
+	environment.back()[identifier.id] = value;
 }
 
-const Ast::Value& Environment::getValue(const std::string& identifier){
-	return environment.back()[identifier];
+const Ast::Value& Environment::getValue(const Ast::Identifier& identifier){
+	return environment.back()[identifier.id];
 }
 
 void Environment::increaseScope(){

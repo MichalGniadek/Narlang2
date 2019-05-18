@@ -9,9 +9,9 @@ namespace Env{
 
 	class Environment{
 	public:
-		void allocateValue(const std::string& identifier, const Ast::Value& value);
-		void setValue(const std::string& identifier, const Ast::Value& value);
-		const Ast::Value& getValue(const std::string& identifier);
+		void allocateValue(const Ast::Identifier& identifier, const Ast::Value& value);
+		void setValue(const Ast::Identifier& identifier, const Ast::Value& value);
+		const Ast::Value& getValue(const Ast::Identifier& identifier);
 		void increaseScope();
 		void decreaseScope();
 	private:

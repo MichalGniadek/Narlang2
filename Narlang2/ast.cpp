@@ -38,8 +38,20 @@ const Value Literal::run(Env::Environment& env) const{
 BinaryOperator::BinaryOperator(const Type t, Node const * const n1, Node const * const n2) : type(t), n1(n1), n2(n2) {}
 
 const Value BinaryOperator::run(Env::Environment& env) const{
-	Value val1 = n1->run(env);
-	Value val2 = n2->run(env);
+	auto getUnderlyingValue = [&env](const std::unique_ptr<const Node>& n){
+		Value val = n->run(env);
+		if(auto p = std::get_if<Identifier>(&val); p != nullptr){
+			val = env.getValue(*p);
+		}
+		return val;
+	};
+
+	Value val1 = getUnderlyingValue(n1);
+	Value val2 = getUnderlyingValue(n2);
+
+	if(auto p = std::get_if<Identifier>(&val2); p != nullptr){
+		val2 = env.getValue(*p);
+	}
 	switch(type){
 	case Addition:
 		if(auto[p1, p2] = std::make_pair(std::get_if<int>(&val1), std::get_if<int>(&val2)); p1 && p2){
@@ -204,8 +216,14 @@ const Value Ast::Identifier_n::run(Env::Environment & env) const{
 Ast::Assign::Assign(Node const * const lnode, Node const * const rnode) : lnode(lnode), rnode(rnode) {}
 
 const Value Ast::Assign::run(Env::Environment & env) const{
-	auto id = std::get_if<Identifier>(&lnode->run(env));
+	Identifier id = *std::get_if<Identifier>(&lnode->run(env));
 	const Value v = rnode->run(env);
-	env.setValue(id->id, v);
+	env.setValue(id, v);
 	return v;
+}
+
+Ast::DEBUG_GetValue::DEBUG_GetValue(Node const * const node) : node(node) {}
+
+const Value Ast::DEBUG_GetValue::run(Env::Environment & env) const{
+	return env.getValue(*std::get_if<Identifier>(&node->run(env)));
 }
