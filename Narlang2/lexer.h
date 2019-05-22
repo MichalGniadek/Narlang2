@@ -44,9 +44,4 @@ private:
 	std::string error;
 };
 
-class Lexer{
-public:
-	Lexer();
-	const TokenList parse (const std::string& source) const;
-private:
-};
+TokenList lexer_parse(const std::string& source);

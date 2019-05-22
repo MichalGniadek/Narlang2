@@ -6,11 +6,9 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 TEST_CLASS(LexerTests){
 public:
-	Lexer lex;
-	
 	void check_tokens(const std::string& s, const bool error, const std::vector<Token>& expected_tokens, 
 							const std::vector<TokenData>& expected_token_data){
-		auto tokens = lex.parse(s);
+		auto tokens = lexer_parse(s);
 
 		if (!error) {
 			Assert::IsFalse(tokens.hasError(), stringToWchar(tokens.getError()));

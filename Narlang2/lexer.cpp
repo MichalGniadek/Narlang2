@@ -112,9 +112,7 @@ void TokenList::advanceToken() {
 	current_token++;
 }
 
-Lexer::Lexer(){}
-
-const TokenList Lexer::parse(const std::string &source) const{
+TokenList lexer_parse(const std::string &source){
 	TokenList token_list;
 
 	int line_counter = 0;
